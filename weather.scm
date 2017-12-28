@@ -27,10 +27,11 @@
   (format #t "~a ~a~%"
           (match weather-main
             ("Clear" "")
-            ("Cloud" "")
+            ("Clouds" "")
             ((or "Rain" "Drizzle") "")
             ("Storm" "")
             ("Snow" "")
-            ((or "Fog" "Mist") ""))
+            ((or "Fog" "Mist" "Haze") "")
+            (_ weather-main))
           (inexact->exact
            (round weather-temp))))
