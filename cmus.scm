@@ -7,6 +7,7 @@
 
 (set-buffering-mode! (current-output-port) line:)
 
+;; builtin xsubstring has a bug
 (define (x-substring str from #!optional to start end)
   (let (( len (string-length str)))
     (when (or (and start (not (<= 0 start)))
@@ -41,21 +42,21 @@
    path: '/org/mpris/MediaPlayer2
    interface: 'org.freedesktop.DBus.Properties))
 
-(define player-context
-  (dbus:make-context
-   service: 'org.mpris.MediaPlayer2.cmus
-   path: '/org/mpris/MediaPlayer2
-   interface: 'org.mpris.MediaPlayer2.Player))
+;; (define player-context
+;;   (dbus:make-context
+;;    service: 'org.mpris.MediaPlayer2.cmus
+;;    path: '/org/mpris/MediaPlayer2
+;;    interface: 'org.mpris.MediaPlayer2.Player))
 
-(define (player action . args)
-  (if (null? args)
-      (dbus:call player-context action)
-      (apply
-       (cut dbus:call
-         player-context
-         action
-         <>)
-       args)))
+;; (define (player action . args)
+;;   (if (null? args)
+;;       (dbus:call player-context action)
+;;       (apply
+;;        (cut dbus:call
+;;          player-context
+;;          action
+;;          <>)
+;;        args)))
 
 (define (get-prop prop)
   (car (dbus:call cmus-props "Get" "org.mpris.MediaPlayer2.Player" prop)))
@@ -70,24 +71,38 @@
      (format "~a - ~a" song artist))))
 
 (define (main)
-
+  (define (make-start)
+    (define count 0)
+    (define start 0)
+    (lambda (#!optional reset)
+      (if reset
+          (begin
+            (set! count 1)
+            (set! start 0))
+          (begin
+            (set! count (+ count 1))
+            (when (> count 12)
+              (set! start (+ start 1)))))
+      start))
+  (define get-start (make-start))
   ;; (print (string-append icon (substring str 0 width)))
-  (let loop ((start 0)
+  (let loop ((start (get-start))
              (oldstr ""))
     (handle-exceptions err (format #t "~%")
       (let* ((info (get-info))
              (status (car info))
              (icon (cond ((string= status "Paused")
-                          "▶")
+                          "|")
                          ((string= status "Playing")
-                          "")))
+                          ">")
+                         (else "■")))
              (str (cadr info))
              (len (string-length str))
              (width (or (and (> len 20) 20) len))
              (start (if (or (not (string= oldstr str))
                             (= start (+ len 3)))
-                        0
-                        start))
+                        (get-start 'reset)
+                        (get-start)))
              (printstr (if (> len width)
                            (x-substring (format "~a   " str)
                                         start
@@ -102,7 +117,7 @@
         ;; Also, the width thing isnt really working, maybe the format above
         ;; should be moved to the str down there
         (if (member status '("Playing" "Paused"))
-            (format #t "~a~%" (string-append icon " " printstr))
+            (format #t " ~a ~%" (string-append icon " " printstr))
             (format #t "~%"))
         ;; (when (string-prefix? printstr str)
         ;;   (thread-sleep! 2.5))
@@ -125,16 +140,4 @@
 ;;     count)
 ;;   )
 
-;; (define (make-start)
-;;   (define count 0)
-;;   (define start 0)
-;;   (lambda (#!optional reset)
-;;     (if reset
-;;         (begin
-;;           (set! count 1)
-;;           (set! start 0))
-;;         (begin
-;;           (set! count (+ count 1))
-;;           (when (> count 3)
-;;             (set! start (+ start 1)))))
-;;     start))
+
