@@ -122,7 +122,7 @@
              " ~a ~%"
              (string-append  (if spotify
                                  " "
-                                 "")
+                                 "C* ")
                              icon
                              " "
                              printstr))
