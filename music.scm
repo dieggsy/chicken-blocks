@@ -114,14 +114,6 @@
                                         start
                                         (+ start width))
                            str)))
-        ;; Figure out how to not keep printing whne song hasnt changed and
-        ;; width doesn't require scroll
-        ;; (cond ((and (string= oldstr str))
-        ;;        ()))
-        ;; Figure out how to pause a bit longer at the begining of a song.
-        ;; (something something string-prefix?)
-        ;; Also, the width thing isnt really working, maybe the format above
-        ;; should be moved to the str down there
         (if (member status '("Playing" "Paused"))
             (format
              #t
@@ -141,17 +133,3 @@
     (loop (+ 1 start) "")))
 
 (main)
-
-;; (define (make-counter)
-;;   (define count 0)
-;;   ;; (lambda ()
-;;   ;;   (set! count (+ count 1))
-;;   ;;   count)
-;;   (lambda (#!optional reset)
-;;     (if reset
-;;         (set! count 1)
-;;         (set! count (+ count 1)))
-;;     count)
-;;   )
-
-
