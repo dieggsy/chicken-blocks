@@ -36,9 +36,15 @@
 (dbus:auto-unbox-variants #t)
 (dbus:auto-unbox-structs #t)
 
-(define cmus-props
+(define args (command-line-arguments))
+
+(define spotify (and (not (null? args)) (string= (car args) "spotify")))
+
+(define prop-context
   (dbus:make-context
-   service: 'org.mpris.MediaPlayer2.cmus
+   service: (if spotify
+                'org.mpris.MediaPlayer2.spotify
+                'org.mpris.MediaPlayer2.cmus)
    path: '/org/mpris/MediaPlayer2
    interface: 'org.freedesktop.DBus.Properties))
 
@@ -59,7 +65,7 @@
 ;;        args)))
 
 (define (get-prop prop)
-  (car (dbus:call cmus-props "Get" "org.mpris.MediaPlayer2.Player" prop)))
+  (car (dbus:call prop-context "Get" "org.mpris.MediaPlayer2.Player" prop)))
 
 (define (get-info)
   (let* ((status (get-prop "PlaybackStatus"))
@@ -117,7 +123,15 @@
         ;; Also, the width thing isnt really working, maybe the format above
         ;; should be moved to the str down there
         (if (member status '("Playing" "Paused"))
-            (format #t " ~a ~%" (string-append icon " " printstr))
+            (format
+             #t
+             " ~a ~%"
+             (string-append  (if spotify
+                                 " "
+                                 "")
+                             icon
+                             " "
+                             printstr))
             (format #t "~%"))
         ;; (when (string-prefix? printstr str)
         ;;   (thread-sleep! 2.5))
