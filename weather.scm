@@ -1,7 +1,6 @@
 #!/usr/bin/csi -script
 (use (prefix medea medea:)
      (prefix http-client hc:)
-     uri-common
      matchable)
 
 (define api-key "***REMOVED***")
@@ -19,18 +18,12 @@
 
 (define weather-info (hc:with-input-from-request weather-url #f medea:read-json))
 
-(define (alist-ref* alist . keys)
-  (let loop ((klst (reverse keys)))
-    (if (null? klst)
-        alist
-        (alist-ref (car klst) (loop (cdr klst))))))
-
 (let ((weather-main (alist-ref
                      'main
                      (vector-ref
                       (alist-ref 'weather weather-info)
                       0)))
-      (weather-temp (alist-ref* weather-info 'main 'temp)))
+      (weather-temp (alist-ref 'temp (alist-ref 'main weather-info))))
   (format #t "~a ~a~%"
           (match weather-main
             ("Clear" "")
