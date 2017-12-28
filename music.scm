@@ -3,7 +3,9 @@
      srfi-26
      srfi-13
      srfi-1
-     posix)
+     posix
+     s
+     utf8)
 
 (set-buffering-mode! (current-output-port) line:)
 
