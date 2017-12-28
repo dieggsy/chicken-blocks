@@ -106,7 +106,7 @@
                          (else "■")))
              (str (cadr info))
              (len (string-length str))
-             (width (or (and (> len 20) 20) len))
+             (width 20)
              (start (if (or (not (string= oldstr str))
                             (= start (+ len 3)))
                         (get-start 'reset)
@@ -115,7 +115,7 @@
                            (x-substring (format "~a   " str)
                                         start
                                         (+ start width))
-                           str)))
+                           (s-center width str))))
         (if (member status '("Playing" "Paused"))
             (format
              #t
