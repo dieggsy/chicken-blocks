@@ -38,7 +38,7 @@
         (string= (get-environment-variable "BLOCK_BUTTON") "1")
         (system "notify-send \"$(upower -i /org/freedesktop/UPower/devices/battery_BAT0)\"")))
     ;; Warn
-    (when (and (<= 10 percent) (not connected))
+    (when (and (<= percent 10) (not connected))
       (let ((warn "Battery critically low, consider charging."))
         (system (format "espeak -vf4 '~a' &" warn))
         (system (format "notify-send '~a' &" warn))))
