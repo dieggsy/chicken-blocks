@@ -45,6 +45,6 @@
                                (format-date "~B" date-now)
                                (date-year date-now)))
                       (make-current-month)))))
-  (format #t "~a ~%" datestr-now))
+  (format #t "    ~a ~%" datestr-now))
 
 (main)
