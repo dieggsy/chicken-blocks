@@ -24,7 +24,7 @@
                       (alist-ref 'weather weather-info)
                       0)))
       (weather-temp (alist-ref 'temp (alist-ref 'main weather-info))))
-  (format #t "~a ~a~%"
+  (format #t " ~a ~a ~%"
           (match weather-main
             ("Clear" "")
             ("Clouds" "")
