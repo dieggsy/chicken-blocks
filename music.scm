@@ -79,7 +79,8 @@
      (format "~a - ~a" song artist))))
 
 (define (main)
-  (define (make-start)
+  ;; make a counter delayed by n counts
+  (define (make-start n)
     (define count 0)
     (define start 0)
     (lambda (#!optional reset)
@@ -89,10 +90,10 @@
             (set! start 0))
           (begin
             (set! count (+ count 1))
-            (when (> count 12)
+            (when (> count n)
               (set! start (+ start 1)))))
       start))
-  (define get-start (make-start))
+  (define get-start (make-start 12))
   ;; (print (string-append icon (substring str 0 width)))
   (let loop ((start (get-start))
              (oldstr ""))
