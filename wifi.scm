@@ -51,7 +51,8 @@
                             (make-connection-string (car conn))
                             " "
                             (loop (cdr conn)))))))
-    (when (not (string-null? connections))
-      (format #t " ~a~%" connections))))
+    (if  (string-null? connections)
+         (format #t "   No Connection ~%")
+         (format #t " ~a~%" connections))))
 
 (main)
