@@ -120,13 +120,14 @@
         (if (member status '("Playing" "Paused"))
             (format
              #t
-             " ~a ~%"
-             (string-append  (if spotify
-                                 " "
-                                 "C* ")
-                             icon
-                             " "
-                             printstr))
+             "~a~%"
+             (string-append  ;; (if spotify
+              ;;     " "
+              ;;     "C* ")
+              icon
+              " "
+              printstr)
+             )
             (format #t "~%"))
         ;; (when (string-prefix? printstr str)
         ;;   (thread-sleep! 2.5))

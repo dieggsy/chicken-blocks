@@ -29,7 +29,7 @@
                      "Get"
                      "org.freedesktop.NetworkManager.Connection.Active" "Type")))
          (icon (cond ((string-suffix? "wireless" type)
-                      " ")
+                      "")
                      ((string-suffix? "ethernet" type)
                       "<>")
                      (else "?"))))
@@ -55,7 +55,7 @@
                                 "")
                             (loop (cdr conn) (+ 1 count)))))))
     (if  (string-null? connections)
-         (format #t "   No Connection ~%")
-         (format #t " ~a~%" connections))))
+         (format #t "  No Connection~%")
+         (format #t "~a~%" connections))))
 
 (main)
