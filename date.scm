@@ -6,7 +6,7 @@
 
 (define date-now (time->date time-now))
 
-(define datestr-now (format-date "~Y-~m-~d ~H:~M" date-now))
+(define datestr-now (format-date "~a ~Y-~m-~d ~H:~M" date-now))
 
 (define (make-current-month)
   (string-append
