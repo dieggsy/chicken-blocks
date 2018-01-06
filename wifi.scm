@@ -44,13 +44,16 @@
   (let ((click (get-environment-variable "BLOCK_BUTTON")))
     (when (and click (string= click "1"))
       (system "networkmanager_dmenu &")))
-  (let ((connections (let loop ((conn active-connections))
+  (let ((connections (let loop ((conn active-connections)
+                                (count 0))
                        (if (null? conn)
                            ""
                            (string-append
                             (make-connection-string (car conn))
-                            " "
-                            (loop (cdr conn)))))))
+                            (if (positive? count)
+                                " "
+                                "")
+                            (loop (cdr conn) (+ 1 count)))))))
     (if  (string-null? connections)
          (format #t "   No Connection ~%")
          (format #t " ~a~%" connections))))
