@@ -29,7 +29,7 @@
             ("Clear" "")
             ("Clouds" "")
             ((or "Rain" "Drizzle") "")
-            ("Storm" "")
+            ((or "Thunderstorm" "Storm") "")
             ("Snow" "")
             ((or "Fog" "Mist" "Haze") "")
             (_ weather-main))
