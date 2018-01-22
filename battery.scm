@@ -45,7 +45,7 @@
     ;; Print
     (format
      #t
-     "  ~a  ~a ~%"
+     "~a ~a~%"
      (cond (connected
             "")
            ((> percent 95)
