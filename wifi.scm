@@ -1,43 +1,32 @@
 #!/usr/bin/csi -script
-(use (prefix dbus dbus:)
-     srfi-13)
+(use srfi-13)
 
-(dbus:auto-unbox-object-paths #t)
-(dbus:auto-unbox-variants #t)
+(include "ddbus")
 
-(define nm-props
+(define nm-context
   (dbus:make-context
    bus: dbus:system-bus
    service: 'org.freedesktop.NetworkManager
    path: '/org/freedesktop/NetworkManager
-   interface: 'org.freedesktop.DBus.Properties))
+   interface: 'org.freedesktop.NetworkManager))
 
 ;; connecion object paths
 (define active-connections
-  (vector->list
-   (car
-    (dbus:call nm-props "Get" "org.freedesktop.NetworkManager" "ActiveConnections"))))
+  (vector->list (dbus:get-property nm-context "ActiveConnections")))
 
 (define (make-connection-string path)
   (let* ((context (dbus:make-context
                    bus: dbus:system-bus
                    service: 'org.freedesktop.NetworkManager
                    path: path
-                   interface: 'org.freedesktop.DBus.Properties))
-         (type (car (dbus:call
-                     context
-                     "Get"
-                     "org.freedesktop.NetworkManager.Connection.Active" "Type")))
+                   interface: 'org.freedesktop.NetworkManager.Connection.Active))
+         (type (dbus:get-property context "Type"))
          (icon (cond ((string-suffix? "wireless" type)
                       "")
                      ((string-suffix? "ethernet" type)
                       "<>")
                      (else "?"))))
-    (let* ((id (car (dbus:call
-                     context
-                     "Get"
-                     "org.freedesktop.NetworkManager.Connection.Active"
-                     "Id"))))
+    (let* ((id (dbus:get-property context "Id")))
       (string-append icon " " id))))
 
 (define (main)

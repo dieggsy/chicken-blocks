@@ -1,11 +1,12 @@
 #!/usr/bin/csi -script
-(use (prefix dbus dbus:)
-     srfi-26
+(use srfi-26
      srfi-13
      srfi-1
      posix
      s
      utf8)
+
+(include "ddbus")
 
 (set-buffering-mode! (current-output-port) line:)
 
@@ -34,44 +35,21 @@
                  ,(substring str 0 (modulo to len)))
                ""))))))
 
-(dbus:auto-unbox-object-paths #t)
-(dbus:auto-unbox-variants #t)
-(dbus:auto-unbox-structs #t)
-
 (define args (command-line-arguments))
 
 (define spotify (and (not (null? args)) (string= (car args) "spotify")))
 
-(define prop-context
+(define player-context
   (dbus:make-context
    service: (if spotify
                 'org.mpris.MediaPlayer2.spotify
                 'org.mpris.MediaPlayer2.cmus)
    path: '/org/mpris/MediaPlayer2
-   interface: 'org.freedesktop.DBus.Properties))
-
-;; (define player-context
-;;   (dbus:make-context
-;;    service: 'org.mpris.MediaPlayer2.cmus
-;;    path: '/org/mpris/MediaPlayer2
-;;    interface: 'org.mpris.MediaPlayer2.Player))
-
-;; (define (player action . args)
-;;   (if (null? args)
-;;       (dbus:call player-context action)
-;;       (apply
-;;        (cut dbus:call
-;;          player-context
-;;          action
-;;          <>)
-;;        args)))
-
-(define (get-prop prop)
-  (car (dbus:call prop-context "Get" "org.mpris.MediaPlayer2.Player" prop)))
+   interface: 'org.mpris.MediaPlayer2.Player))
 
 (define (get-info)
-  (let* ((status (get-prop "PlaybackStatus"))
-         (metadata (vector->list (get-prop "Metadata")))
+  (let* ((status (dbus:get-property player-context "PlaybackStatus"))
+         (metadata (vector->list (dbus:get-property player-context "Metadata")))
          (artist (vector-ref (alist-ref "xesam:artist" metadata equal?) 0))
          (song (alist-ref "xesam:title" metadata equal?)))
     (list
