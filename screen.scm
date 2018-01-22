@@ -1,10 +1,9 @@
 #!/usr/bin/csi -script
-(use (prefix shell shell:))
+(use scsh-process)
 
 (define (main)
   (let* ((args (command-line-arguments))
-         (brightness (string->number
-                      (string-chomp (shell:capture "xbacklight -get"))))
+         (brightness (run/sexp (xbacklight -get)))
          ;; round to closest multiple of 5
          (brightness (inexact->exact (* 5 (round (/ brightness 5)))))
          (add (if (not (null? args))
@@ -14,7 +13,7 @@
                   0)))
     (let ((brightness (+ brightness add)))
       (when (not (zero? add))
-        (system (format "xbacklight -set ~a > /dev/null 2>&1" brightness)))
+        (run (xbacklight -set ,brightness)))
       (format #t "    ~a~%" brightness))))
 
 (main)
