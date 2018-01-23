@@ -42,7 +42,13 @@
             (set! start (+ start 1)))))
     start))
 
-(define (scroll fn #!key (sleep .2) (delay 12) (end-pad 3) (width 20))
+(define (scroll fn
+                #!key
+                (sleep .2)
+                (delay 12)
+                (end-pad 3)
+                (max-width 20)
+                (fixed-width #f))
   (define get-start (make-start delay))
   (let loop ((start (get-start))
              (oldstr ""))
@@ -53,14 +59,16 @@
                               (= start (+ len end-pad)))
                           (get-start 'reset)
                           start))
-               (printstr (if (> len width)
+               (printstr (if (> len max-width)
                              (x-substring
                               (format "~a~a"
                                       str
                                       (make-string end-pad #\space))
                               start
-                              (+ start width))
-                             (s-center width str))))
+                              (+ start max-width))
+                             (if fixed-width
+                                 (s-center max-width str)
+                                 str))))
           (if (and icon str)
               (printf "~a ~a~%" icon printstr)
               (printf "~a~%" printstr))))
