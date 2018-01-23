@@ -6,7 +6,7 @@
 (define api-key
   ;; Create an account on openweathermap.org and aftert signing in get an API
   ;; key from: https://home.openweathermap.org/api_keys
-  "***REMOVED***")
+  "00000000000000000000000000000000")
 
 (define city-id
   ;; City id can be found here: http://openweathermap.org/find
