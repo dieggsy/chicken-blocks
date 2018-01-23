@@ -3,11 +3,19 @@
      (prefix http-client hc:)
      matchable)
 
-(define api-key "***REMOVED***")
+(define api-key
+  ;; Create an account on openweathermap.org and aftert signing in get an API
+  ;; key from: https://home.openweathermap.org/api_keys
+  "***REMOVED***")
 
-(define city-id 0000000)
+(define city-id
+  ;; City id can be found here: http://openweathermap.org/find
+  ;; Should be an integer
+  0000000)
 
-(define units "imperial")
+(define units
+  ;; "imperial" or "metric"
+  "imperial")
 
 (define weather-url
   (format
@@ -16,22 +24,39 @@
    api-key
    units))
 
-(define weather-info (hc:with-input-from-request weather-url #f medea:read-json))
+(define (weather-info)
+  (hc:with-input-from-request weather-url #f medea:read-json))
 
-(let ((weather-main (alist-ref
-                     'main
-                     (vector-ref
-                      (alist-ref 'weather weather-info)
-                      0)))
-      (weather-temp (alist-ref 'temp (alist-ref 'main weather-info))))
-  (format #t "~a ~a~%"
-          (match weather-main
-            ("Clear" "")
-            ("Clouds" "")
-            ((or "Rain" "Drizzle") "")
-            ((or "Thunderstorm" "Storm") "")
-            ("Snow" "")
-            ((or "Fog" "Mist" "Haze") "")
-            (_ weather-main))
-          (inexact->exact
-           (round weather-temp))))
+(define (get-icon icon)
+  ;; Get icon from weather-icons ttf according to definitions in
+  ;; https://openweathermap.org/weather-conditions
+  (match icon
+    ;; Clear
+    ("01d" "") ("01n" "")
+    ;; Few clouds
+    ("02d" "") ("02n" "")
+    ;; Scattered clouds
+    ((or "03n" "03d") "")
+    ;; Broken clouds
+    ((or "04n" "04d") "")
+    ;; Showers
+    ("09d" "") ("09n" "")
+    ;; Rain
+    ("10d" "") ("10n" "")
+    ;; Thunderstorm
+    ("11d" "") ("11n" "")
+    ;; Snow or freezing rain
+    ("13d" "") ("13n" "")
+    ;; Fog or mist
+    ("50d" "") ("50n" "")
+    ;; Unknown
+    (_ "")))
+
+(define (main)
+  (let* ((info (weather-info))
+         (temp (inexact->exact
+                (round (alist-ref 'temp (alist-ref 'main info)))))
+         (icon (alist-ref 'icon (vector-ref (alist-ref 'weather info) 0))))
+    (format #t "~a ~a~%" (get-icon icon) temp)))
+
+(main)
