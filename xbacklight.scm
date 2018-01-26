@@ -14,6 +14,7 @@
     (let ((brightness (+ brightness add)))
       (when (not (zero? add))
         (run (xbacklight -set ,brightness)))
-      (format #t "    ~a~%" brightness))))
+      (display brightness)
+      (newline))))
 
 (main)

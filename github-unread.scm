@@ -1,5 +1,6 @@
 (use (prefix medea medea:)
-     (only (prefix http-client hc:) hc:with-input-from-request))
+     (only (prefix http-client hc:) hc:with-input-from-request)
+     utils)
 
 (define access-token
   (string-chomp
@@ -18,3 +19,5 @@
     (if (zero? (vector-length data))
         (printf "~%")
         (printf "~a~%" (vector-length data)))))
+
+(main)

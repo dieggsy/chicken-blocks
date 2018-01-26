@@ -1,18 +1,20 @@
 #!/usr/bin/csi -s
+(use (prefix dbus dbus:)
+     srfi-13
+     posix)
 
-(use (prefix dbus dbus:))
+(define args (command-line-arguments))
 
-(: main (-> string))
+(define $1 (and (not (null? args)) (car args)))
+
 (define (main)
   (let* ((kb-light (dbus:make-context
                     #:bus dbus:system-bus
                     #:service 'org.freedesktop.UPower
                     #:interface 'org.freedesktop.UPower.KbdBacklight
                     #:path '/org/freedesktop/UPower/KbdBacklight))
-         (argv (command-line-arguments))
-         (up-down (when (not (null? argv)) (car argv)))
-         (delta (cond ((equal? up-down "+") 17)
-                      ((equal? up-down "-") -17)
+         (delta (cond ((string= $1 "+") 17)
+                      ((string= $1 "-") -17)
                       (else 0)))
          (current (car (dbus:call kb-light "GetBrightness")))
          (maximum (car (dbus:call kb-light "GetMaxBrightness")))

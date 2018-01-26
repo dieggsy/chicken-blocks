@@ -1,6 +1,4 @@
 #!/usr/bin/csi -script
-(use srfi-13)
-
 (include "ddbus")
 
 (define battery-context
