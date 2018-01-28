@@ -12,3 +12,5 @@
      (inexact->exact
       (round (* 100 (/ current-brightness max-brightness)))))
     (newline)))
+
+(main)

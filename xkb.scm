@@ -18,7 +18,9 @@
   (when (not (equal? (current-map) "dvorak"))
     (display (current-map)))
   (newline)
-  (with-output-to-file "/tmp/ipc-polybar-simple"
-    (lambda () (display "hook:module/xkb1"))))
+  (unless (and (not (null? args))
+               (equal? (car args) "-display"))
+    (with-output-to-file "/tmp/ipc-polybar-simple"
+      (lambda () (display "hook:module/xkb1")))))
 
 (main)
