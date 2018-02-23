@@ -62,6 +62,6 @@
          (temp (inexact->exact
                 (round (alist-ref 'temp (alist-ref 'main info)))))
          (icon (alist-ref 'icon (vector-ref (alist-ref 'weather info) 0))))
-    (format #t "~a ~a~%" (get-icon icon) temp)))
+    (printf "~a ~a~%" (get-icon icon) temp)))
 
 (main)
