@@ -12,7 +12,7 @@
          (children (alist-ref 'children (alist-ref 'data info)))
          (unread (vector-length children)))
     (if (zero? unread)
-        (printf "")
+        (newline)
         (printf "~a~%" unread))))
 
 (main)
