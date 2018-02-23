@@ -17,7 +17,7 @@
                #f
                medea:read-json)))
     (if (zero? (vector-length data))
-        (printf "~%")
+        (newline)
         (printf "~a~%" (vector-length data)))))
 
 (main)
