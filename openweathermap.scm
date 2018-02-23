@@ -1,7 +1,10 @@
 #!/usr/bin/csi -script
 (use (prefix medea medea:)
      (prefix http-client hc:)
-     matchable)
+     matchable
+     uri-common)
+
+(form-urlencoded-separator "&")
 
 (define api-key
   ;; Create an account on openweathermap.org and aftert signing in get an API
@@ -18,11 +21,13 @@
   "imperial")
 
 (define weather-url
-  (format
-   "http://api.openweathermap.org/data/2.5/weather?id=~a&appid=~a&units=~a"
-   city-id
-   api-key
-   units))
+  (make-uri scheme: 'https
+            host: "api.openweathermap.org"
+            path: '(/ "data" "2.5" "weather")
+
+            query: `((id . ,city-id)
+                     (appid . ,api-key)
+                     (units . ,units))))
 
 (define (weather-info)
   (hc:with-input-from-request weather-url #f medea:read-json))
