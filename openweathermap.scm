@@ -45,15 +45,15 @@
     ;; Broken clouds
     ((or "04n" "04d") "")
     ;; Showers
-    ("09d" "") ("09n" "")
+    ((or "09d" "09n") "")
     ;; Rain
-    ("10d" "") ("10n" "")
+    ((or "10d" "10n") "")
     ;; Thunderstorm
-    ("11d" "") ("11n" "")
+    ((or "11d" "11n") "")
     ;; Snow or freezing rain
-    ("13d" "") ("13n" "")
+    ((or "13d" "13n") "")
     ;; Fog or mist
-    ("50d" "") ("50n" "")
+    ((or "50d" "50n") "")
     ;; Unknown
     (_ "")))
 
