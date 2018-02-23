@@ -1,12 +1,12 @@
+#!/usr/bin/csi -s
 (use scsh-process)
 
 (define (main)
-  (let* ((status (string-chomp (run/string (dropbox-cli status) (= 2 1))))
-         (status (if (> (string-length status) 20)
-                     (substring status 0 20)
-                     status)))
-    (if (not (string= status "Up to date"))
-        (printf "~a~%" status)
-        (newline))))
+  (let* ((status (string-chomp (run/string (dropbox-cli status) (= 2 1)))))
+    (cond ((string= status "Dropbox isn't running!")
+           (printf "~%"))
+          ((substring-index-ci "sync" status)
+           (printf "~%"))
+          (else (newline)))))
 
 (main)
