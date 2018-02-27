@@ -1,0 +1,9 @@
+#+title: chicken-blocks
+
+System status "blocks" written in CHICKEN scheme.
+
+I tried to make these eggs "cheat" (e.g. call a shell subprocess) as little
+as possible (often through the dbus egg), but if necessary used the
+scsh-process egg.
+
+I'll add a proper makefile eventually....
